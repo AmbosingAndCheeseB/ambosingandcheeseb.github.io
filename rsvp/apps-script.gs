@@ -13,7 +13,13 @@ var HEADERS = ['받은 시각', '응답 ID', '구분', '성함', '참석 여부'
 /** 처음 한 번만 실행: 시트와 요약표를 만들어요. */
 function setup() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sh = ss.getSheetByName(SHEET) || ss.insertSheet(SHEET);
+  var sh = ss.getSheetByName(SHEET);
+  if (!sh) {
+    var first = ss.getSheets()[0];
+    // 새 시트의 빈 기본 탭('시트1')이 있으면 그 탭을 '응답'으로 바꿔 써요
+    if (ss.getSheets().length === 1 && first.getLastRow() === 0) sh = first.setName(SHEET);
+    else sh = ss.insertSheet(SHEET);
+  }
   sh.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]).setFontWeight('bold');
   sh.setFrozenRows(1);
   sh.getRange('B:B').setNumberFormat('@');
