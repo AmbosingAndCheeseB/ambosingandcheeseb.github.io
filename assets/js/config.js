@@ -6,7 +6,7 @@
  */
 window.WEDDING = {
   // 청첩장 주소 (공유 버튼·링크 복사에 사용)
-  siteUrl: 'https://ambosingandcheeseb.github.io/github.io/',
+  siteUrl: 'https://ambosingandcheeseb.github.io/',
 
   // 예식 일시 (한국 시간 기준)
   date: '2027-03-27',

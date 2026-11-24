@@ -51,6 +51,6 @@ python3 -m http.server 8000
 
 ## 배포 (GitHub Pages)
 
-저장소 **Settings → Pages**에서 `main` 브랜치 / `/ (root)`를 선택하면
-`https://ambosingandcheeseb.github.io/github.io/`에 게시돼요.
+GitHub Pages가 `main` 브랜치 `/ (root)`로 설정되어 있어서, `main`에 올라가면
+`https://ambosingandcheeseb.github.io/`에 게시돼요.
 주소가 달라지면 `config.js`의 `siteUrl`과 `index.html`의 `og:url`, `og:image`를 함께 바꿔 주세요.
