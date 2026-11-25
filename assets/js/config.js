@@ -33,7 +33,7 @@ window.WEDDING = {
 
   // 참석 응답을 저장할 Google Apps Script 웹 앱 주소 (README 참고)
   // 비워 두면 '테스트 모드'로 동작하고 응답이 저장되지 않아요.
-  rsvpEndpoint: '',
+  rsvpEndpoint: 'https://script.google.com/macros/s/AKfycby5FgHroRemtsIeSstnqNEU9emlDlQei4BoA5RwBfAeVHLrGaX_53YaoDEGM2FkG-ONqg/exec',
 
   // 카카오 JavaScript 키 (비워 두면 휴대폰 기본 공유 / 링크 복사로 대신해요)
   kakaoJsKey: '',
