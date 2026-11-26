@@ -5,15 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#F2ECE6">
+<meta name="color-scheme" content="light">
 <title>3월 27일 양지원 ♥ 김성연 결혼합니다</title>
 <meta name="description" content="2027년 3월 27일 토요일 오전 11시 30분, 전주 바울센터">
 <meta property="og:type" content="website">
 <meta property="og:title" content="3월 27일 양지원 ♥ 김성연 결혼합니다">
 <meta property="og:description" content="2027년 3월 27일 토요일 오전 11시 30분, 전주 바울센터">
 <meta property="og:url" content="https://ambosingandcheeseb.github.io/">
-<!-- 공유 썸네일: images/og.jpg 를 넣은 뒤 아래 줄의 주석을 풀어 주세요 -->
-<!-- <meta property="og:image" content="https://ambosingandcheeseb.github.io/images/og.jpg"> -->
-<script>document.documentElement.className += ' js';</script>
+<!-- 공유 썸네일 (사진을 받으면 images/og.jpg 를 바꿔 주세요) -->
+<meta property="og:image" content="https://ambosingandcheeseb.github.io/images/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<script>
+  // 스크립트가 늦거나 실패해도 글자가 숨은 채로 남지 않게
+  document.documentElement.className += ' js';
+  setTimeout(function () { if (!window.__wedReady) document.documentElement.className += ' fx-off'; }, 2500);
+  try { if (localStorage.getItem('font-big') === '1') document.documentElement.className += ' big'; } catch (e) {}
+</script>
+<link rel="preload" href="assets/fonts/RIDIBatang-sub.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;500&family=Ms+Madi&display=swap">
@@ -41,6 +50,7 @@
     <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 4.5c-5 0-8.5 3-8.5 6.6 0 2.3 1.5 4.3 3.8 5.5l-.8 3.2 3.6-2.3c.6.1 1.2.1 1.9.1 5 0 8.5-3 8.5-6.5S17 4.5 12 4.5z"/></symbol>
     <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1.2 1.2"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2"/></symbol>
     <symbol id="i-photo" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M4 17l5-4.5 4 3.5 2.5-2 4.5 3.5"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol>
   </defs>
 </svg>
 
@@ -48,6 +58,7 @@
 
   <!-- ───────── 표지 ───────── -->
   <header class="cover">
+    <canvas class="petals" id="petals" aria-hidden="true"></canvas>
     <div class="cover-head">
       <p class="cover-eng fade">THE NEW BEGINNING</p>
       <h1 class="cover-names fade">양지원<span class="and">그리고</span>김성연</h1>
@@ -57,7 +68,7 @@
     </div>
     <div class="cover-foot fade">
       <p class="script">We are getting married</p>
-      <p class="cover-when">2027년 3월 27일 토요일 오전 11시 30분</p>
+      <p class="cover-when">2027년 3월 27일 토요일<br>오전 11시 30분</p>
       <p class="cover-where">전주 바울센터</p>
     </div>
   </header>
@@ -82,9 +93,10 @@
 
     <!-- ───────── 예식 일시 ───────── -->
     <section class="sec sec-date" aria-labelledby="t-date">
+      <p class="dday-badge fade" id="ddayBadge" aria-hidden="true"></p>
       <h2 class="date-num fade" id="t-date">2027.03.27</h2>
       <p class="date-sub fade">토요일 오전 11시 30분</p>
-      <div class="calendar fade" id="calendar" aria-label="2027년 3월 달력"></div>
+      <div class="calendar fade" id="calendar" aria-label="2027년 3월 달력, 27일 토요일 예식"></div>
       <div class="countdown fade" id="countdown" aria-hidden="true">
         <div><span class="cd-l">DAYS</span><span class="cd-n" data-cd="d">0</span></div>
         <i>:</i>
@@ -105,9 +117,11 @@
       <p class="venue-addr fade">전북 전주시 완산구 안행로 130</p>
       <p class="venue-tel fade" id="venueTel" hidden></p>
 
-      <div class="map fade">
-        <iframe id="mapFrame" title="바울센터 위치 지도" loading="lazy" referrerpolicy="no-referrer-when-downgrade" tabindex="-1"></iframe>
-        <a class="map-cover" id="mapCover" href="#" target="_blank" rel="noopener">지도 앱에서 크게 보기</a>
+      <div class="map fade" id="map">
+        <img class="map-img" id="mapImg" src="assets/img/map.jpg" alt="바울센터 주변 약도" width="880" height="600" loading="lazy" decoding="async">
+        <span class="map-pin" aria-hidden="true"><b>바울센터</b><svg viewBox="0 0 24 32"><path d="M12 31s10-11.2 10-18.5C22 6.2 17.5 1.5 12 1.5S2 6.2 2 12.5C2 19.8 12 31 12 31z"/><circle cx="12" cy="12.5" r="3.6"/></svg></span>
+        <a class="map-cover" id="mapCover" href="#" target="_blank" rel="noopener"><span><svg class="ic"><use href="#i-expand"/></svg>지도 앱에서 크게 보기</span></a>
+        <small class="map-credit">© OpenStreetMap contributors</small>
       </div>
 
       <div class="loc-actions fade">
@@ -135,6 +149,7 @@
         <button type="button" class="g-arrow g-next" id="gNext" aria-label="다음 사진"><svg class="ic"><use href="#i-right"/></svg></button>
       </div>
       <p class="g-count fade" id="gCount" aria-live="polite"></p>
+      <p class="g-hint fade" id="gHint" hidden>사진을 누르면 크게 볼 수 있어요</p>
     </section>
 
     <!-- ───────── 하객 안내 ───────── -->
@@ -143,24 +158,33 @@
       <h2 class="ko-title fade" id="t-info">하객분들을 위한 안내</h2>
 
       <article class="info-card fade">
-        <h3><span class="num">1</span><svg class="ic"><use href="#i-meal"/></svg>식사 안내</h3>
+        <svg class="ic deco" aria-hidden="true"><use href="#i-meal"/></svg>
+        <h3><span class="num">1</span>식사 안내</h3>
         <p>식사는 <b>오전 11시부터</b> 가능하오니,<br>여유롭게 오셔서 식사 먼저 하셔도 좋습니다.</p>
       </article>
 
       <article class="info-card fade">
-        <h3><span class="num">2</span><svg class="ic"><use href="#i-car"/></svg>주차 안내</h3>
+        <svg class="ic deco" aria-hidden="true"><use href="#i-car"/></svg>
+        <h3><span class="num">2</span>주차 안내</h3>
         <p>식장 내 주차장을 <b>무료</b>로 이용하실 수 있습니다.</p>
       </article>
 
       <article class="info-card fade">
-        <h3><span class="num">3</span><svg class="ic"><use href="#i-bus"/></svg>전세버스 안내</h3>
-        <p class="badge">1월 31일(일)까지 수요 조사</p>
+        <svg class="ic deco" aria-hidden="true"><use href="#i-bus"/></svg>
+        <h3><span class="num">3</span>전세버스 안내</h3>
+        <dl class="kv">
+          <div><dt>출발</dt><dd>서울</dd></div>
+          <div><dt>신청 마감</dt><dd><b>1월 31일(일)</b>까지</dd></div>
+          <div><dt>운행 여부</dt><dd>신청 인원에 따라 확정</dd></div>
+          <div><dt>탑승 안내</dt><dd>신청자분께 개별 연락</dd></div>
+        </dl>
         <p>서울에서 출발하는 전세버스 대절을 계획 중입니다. 탑승 희망 인원에 따라 실제 운행 여부가 결정되오니, 원활한 인원 파악을 위해 <b>1월 31일(일)까지</b> 하단의 [참석 여부 전달하기]에서 버스 탑승 희망 여부를 함께 체크해 주시면 감사하겠습니다.</p>
         <p class="sub">운행 확정 시 상세 탑승 위치 및 출발 시간은 신청자분들께 추후 별도로 안내해 드립니다.</p>
       </article>
 
       <article class="info-card info-rsvp fade" id="rsvp-section">
-        <h3><span class="num">4</span><svg class="ic"><use href="#i-people"/></svg>참석 · 버스 탑승 여부 체크</h3>
+        <svg class="ic deco" aria-hidden="true"><use href="#i-people"/></svg>
+        <h3><span class="num">4</span>참석 · 버스 탑승 체크</h3>
         <p>아래 버튼을 눌러 참석 여부와 전세버스 탑승 희망 여부를 알려 주세요.</p>
         <button type="button" class="btn-main" data-open="rsvp"><svg class="ic"><use href="#i-letter"/></svg><span data-rsvp-label>참석 여부 전달하기</span></button>
       </article>
@@ -170,22 +194,26 @@
     <section class="sec sec-account" aria-labelledby="t-acc">
       <p class="eng-title fade">ACCOUNT</p>
       <h2 class="ko-title fade" id="t-acc">마음 전하실 곳</h2>
-      <p class="sec-desc fade">축하의 마음을 전하고 싶으신 분들을 위해<br>계좌번호를 안내드립니다.<br>따뜻한 마음에 깊이 감사드립니다.</p>
+      <p class="sec-desc fade">축하의 마음을 전하실 분들을 위해<br>계좌번호를 안내드립니다.<br>따뜻한 마음에 깊이 감사드립니다.</p>
 
+      <!--
+        카카오페이 송금 링크가 있으면 해당 계좌의 복사 버튼 위에 아래 줄을 넣어 주세요.
+        <a class="btn-pay" href="https://qr.kakaopay.com/...." target="_blank" rel="noopener">카카오페이</a>
+      -->
       <div class="acc fade">
         <button type="button" class="acc-head" aria-expanded="false" aria-controls="acc-groom">신랑측 계좌번호<svg class="ic"><use href="#i-down"/></svg></button>
         <ul class="acc-body" id="acc-groom" hidden>
           <li>
-            <div class="acc-info"><p class="acc-who"><span class="role">신랑</span>양지원</p><p class="acc-num">카카오뱅크 3333-05-0772781</p></div>
-            <button type="button" class="btn-copy" data-copy="카카오뱅크 3333-05-0772781" data-copy-msg="양지원 님 계좌번호가 복사되었어요"><svg class="ic"><use href="#i-copy"/></svg>복사</button>
+            <div class="acc-info"><p class="acc-who"><span class="role">신랑</span>양지원</p><p class="acc-bank">카카오뱅크</p><p class="acc-num">3333-05-0772781</p></div>
+            <div class="acc-btns"><button type="button" class="btn-copy" data-copy="카카오뱅크 3333-05-0772781" data-copy-msg="양지원 님 계좌번호가 복사되었어요"><svg class="ic"><use href="#i-copy"/></svg>복사</button></div>
           </li>
           <li>
-            <div class="acc-info"><p class="acc-who"><span class="role">아버지</span>양태선</p><p class="acc-num">국민은행 50650104141332</p></div>
-            <button type="button" class="btn-copy" data-copy="국민은행 50650104141332" data-copy-msg="양태선 님 계좌번호가 복사되었어요"><svg class="ic"><use href="#i-copy"/></svg>복사</button>
+            <div class="acc-info"><p class="acc-who"><span class="role">아버지</span>양태선</p><p class="acc-bank">국민은행</p><p class="acc-num">50650104141332</p></div>
+            <div class="acc-btns"><button type="button" class="btn-copy" data-copy="국민은행 50650104141332" data-copy-msg="양태선 님 계좌번호가 복사되었어요"><svg class="ic"><use href="#i-copy"/></svg>복사</button></div>
           </li>
           <li>
-            <div class="acc-info"><p class="acc-who"><span class="role">어머니</span>김상엽</p><p class="acc-num">농협 3510046603813</p></div>
-            <button type="button" class="btn-copy" data-copy="농협 3510046603813" data-copy-msg="김상엽 님 계좌번호가 복사되었어요"><svg class="ic"><use href="#i-copy"/></svg>복사</button>
+            <div class="acc-info"><p class="acc-who"><span class="role">어머니</span>김상엽</p><p class="acc-bank">농협</p><p class="acc-num">3510046603813</p></div>
+            <div class="acc-btns"><button type="button" class="btn-copy" data-copy="농협 3510046603813" data-copy-msg="김상엽 님 계좌번호가 복사되었어요"><svg class="ic"><use href="#i-copy"/></svg>복사</button></div>
           </li>
         </ul>
       </div>
@@ -194,16 +222,16 @@
         <button type="button" class="acc-head" aria-expanded="false" aria-controls="acc-bride">신부측 계좌번호<svg class="ic"><use href="#i-down"/></svg></button>
         <ul class="acc-body" id="acc-bride" hidden>
           <li>
-            <div class="acc-info"><p class="acc-who"><span class="role">신부</span>김성연</p><p class="acc-num">카카오뱅크 3333-05-0202038</p></div>
-            <button type="button" class="btn-copy" data-copy="카카오뱅크 3333-05-0202038" data-copy-msg="김성연 님 계좌번호가 복사되었어요"><svg class="ic"><use href="#i-copy"/></svg>복사</button>
+            <div class="acc-info"><p class="acc-who"><span class="role">신부</span>김성연</p><p class="acc-bank">카카오뱅크</p><p class="acc-num">3333-05-0202038</p></div>
+            <div class="acc-btns"><button type="button" class="btn-copy" data-copy="카카오뱅크 3333-05-0202038" data-copy-msg="김성연 님 계좌번호가 복사되었어요"><svg class="ic"><use href="#i-copy"/></svg>복사</button></div>
           </li>
           <li>
-            <div class="acc-info"><p class="acc-who"><span class="role">아버지</span>김철희</p><p class="acc-num">새마을금고 9002203049185</p></div>
-            <button type="button" class="btn-copy" data-copy="새마을금고 9002203049185" data-copy-msg="김철희 님 계좌번호가 복사되었어요"><svg class="ic"><use href="#i-copy"/></svg>복사</button>
+            <div class="acc-info"><p class="acc-who"><span class="role">아버지</span>김철희</p><p class="acc-bank">새마을금고</p><p class="acc-num">9002203049185</p></div>
+            <div class="acc-btns"><button type="button" class="btn-copy" data-copy="새마을금고 9002203049185" data-copy-msg="김철희 님 계좌번호가 복사되었어요"><svg class="ic"><use href="#i-copy"/></svg>복사</button></div>
           </li>
           <li>
-            <div class="acc-info"><p class="acc-who"><span class="role">어머니</span>김은애</p><p class="acc-num">농협 3520294555973</p></div>
-            <button type="button" class="btn-copy" data-copy="농협 3520294555973" data-copy-msg="김은애 님 계좌번호가 복사되었어요"><svg class="ic"><use href="#i-copy"/></svg>복사</button>
+            <div class="acc-info"><p class="acc-who"><span class="role">어머니</span>김은애</p><p class="acc-bank">농협</p><p class="acc-num">3520294555973</p></div>
+            <div class="acc-btns"><button type="button" class="btn-copy" data-copy="농협 3520294555973" data-copy-msg="김은애 님 계좌번호가 복사되었어요"><svg class="ic"><use href="#i-copy"/></svg>복사</button></div>
           </li>
         </ul>
       </div>
@@ -219,11 +247,17 @@
 
   </main>
 
-  <footer class="foot">
+  <footer class="foot" id="foot">
     <button type="button" class="foot-btn" id="shareBtn"><svg class="ic"><use href="#i-share"/></svg>카카오톡으로 청첩장 보내기</button>
     <button type="button" class="foot-btn" data-copy-url><svg class="ic"><use href="#i-link"/></svg>청첩장 주소 복사하기</button>
     <p class="copy">지원 ♥ 성연 · 2027. 03. 27</p>
   </footer>
+</div>
+
+<!-- ───────── 아래 도우미 바 (글씨 크게 · 참석 여부) ───────── -->
+<div class="dock" id="dock">
+  <button type="button" class="dock-font" id="fontBtn" aria-pressed="false" aria-label="글씨 크게 보기"><b>가</b><span id="fontSign">+</span></button>
+  <button type="button" class="dock-rsvp" id="dockRsvp" data-open="rsvp"><svg class="ic"><use href="#i-letter"/></svg>참석 여부 전달하기</button>
 </div>
 
 <!-- ───────── 연락하기 ───────── -->
@@ -278,74 +312,96 @@
           <label class="choice"><input type="radio" name="side" value="신랑측"><span class="choice-box">신랑측<i class="tick"><svg class="ic"><use href="#i-check"/></svg></i></span></label>
           <label class="choice"><input type="radio" name="side" value="신부측"><span class="choice-box">신부측<i class="tick"><svg class="ic"><use href="#i-check"/></svg></i></span></label>
         </div>
-        <p class="err" data-err="side"></p>
+        <p class="err" data-err="side" role="alert"></p>
       </fieldset>
 
       <div class="field">
         <label class="lbl" for="rsvpName">성함</label>
         <input class="inp" id="rsvpName" name="name" type="text" autocomplete="name" maxlength="20" placeholder="성함을 입력해 주세요">
-        <p class="err" data-err="name"></p>
+        <p class="err" data-err="name" role="alert"></p>
       </div>
 
-      <fieldset class="field">
-        <legend><span class="q">항목 1</span>참석 여부</legend>
-        <div class="choices">
-          <label class="choice"><input type="radio" name="attend" value="참석"><span class="choice-box">참석 가능<i class="tick"><svg class="ic"><use href="#i-check"/></svg></i></span></label>
-          <label class="choice"><input type="radio" name="attend" value="불참"><span class="choice-box">참석 불가<i class="tick"><svg class="ic"><use href="#i-check"/></svg></i></span></label>
-        </div>
-        <p class="err" data-err="attend"></p>
-      </fieldset>
+      <div class="step">
+        <fieldset class="field">
+          <legend><span class="q">1</span>참석 여부</legend>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="attend" value="참석"><span class="choice-box">참석 가능<i class="tick"><svg class="ic"><use href="#i-check"/></svg></i></span></label>
+            <label class="choice"><input type="radio" name="attend" value="불참"><span class="choice-box">참석 불가<i class="tick"><svg class="ic"><use href="#i-check"/></svg></i></span></label>
+          </div>
+          <p class="err" data-err="attend" role="alert"></p>
+        </fieldset>
 
-      <div class="field" data-when="attend=참석" hidden>
-        <p class="lbl" id="lblCount">동행 인원 <small>(본인 포함)</small></p>
-        <div class="stepper" data-step="count" data-min="1" data-max="10" role="group" aria-labelledby="lblCount">
-          <button type="button" class="st-btn" data-delta="-1" aria-label="한 명 줄이기">−</button>
-          <output class="st-val" aria-live="polite"><b>1</b>명</output>
-          <button type="button" class="st-btn" data-delta="1" aria-label="한 명 늘리기">+</button>
-        </div>
-      </div>
-
-      <fieldset class="field" data-when="attend=참석" data-bus hidden>
-        <legend><span class="q">항목 2</span>전세버스 탑승 희망 여부 <small>(서울 출발)</small></legend>
-        <div class="choices">
-          <label class="choice"><input type="radio" name="bus" value="희망"><span class="choice-box">탑승 희망<i class="tick"><svg class="ic"><use href="#i-check"/></svg></i></span></label>
-          <label class="choice"><input type="radio" name="bus" value="미희망"><span class="choice-box">탑승 안 함<i class="tick"><svg class="ic"><use href="#i-check"/></svg></i></span></label>
-        </div>
-        <p class="err" data-err="bus"></p>
-      </fieldset>
-
-      <div class="field" data-when="bus=희망" hidden>
-        <p class="lbl" id="lblBus">버스 탑승 인원</p>
-        <div class="stepper" data-step="busCount" data-min="1" data-max="10" role="group" aria-labelledby="lblBus">
-          <button type="button" class="st-btn" data-delta="-1" aria-label="한 명 줄이기">−</button>
-          <output class="st-val" aria-live="polite"><b>1</b>명</output>
-          <button type="button" class="st-btn" data-delta="1" aria-label="한 명 늘리기">+</button>
+        <div class="field sub-field" data-when="attend=참석" hidden>
+          <p class="lbl" id="lblCount">동행 인원 <small>(본인 포함)</small></p>
+          <div class="stepper" data-step="count" data-min="1" data-max="10" role="group" aria-labelledby="lblCount">
+            <button type="button" class="st-btn" data-delta="-1" aria-label="한 명 줄이기">−</button>
+            <output class="st-val" aria-live="polite"><b>1</b>명</output>
+            <button type="button" class="st-btn" data-delta="1" aria-label="한 명 늘리기">+</button>
+          </div>
         </div>
       </div>
 
-      <div class="field" data-when="bus=희망" hidden>
-        <label class="lbl" for="rsvpPhone">연락처 <small>(버스 안내를 받으실 번호)</small></label>
-        <input class="inp" id="rsvpPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="16" placeholder="010-0000-0000">
-        <p class="err" data-err="phone"></p>
+      <div class="step" id="busStep">
+        <fieldset class="field" id="busField">
+          <legend><span class="q">2</span>전세버스 탑승 희망 여부 <small>(서울 출발)</small></legend>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="bus" value="희망"><span class="choice-box">탑승 희망<i class="tick"><svg class="ic"><use href="#i-check"/></svg></i></span></label>
+            <label class="choice"><input type="radio" name="bus" value="미희망"><span class="choice-box">탑승 안 함<i class="tick"><svg class="ic"><use href="#i-check"/></svg></i></span></label>
+          </div>
+          <p class="hint" id="busHint">참석 가능을 고르시면 선택할 수 있어요.</p>
+          <p class="err" data-err="bus" role="alert"></p>
+        </fieldset>
+
+        <div class="field sub-field" data-when="bus=희망" hidden>
+          <p class="lbl" id="lblBus">버스 탑승 인원</p>
+          <div class="stepper" data-step="busCount" data-min="1" data-max="10" role="group" aria-labelledby="lblBus">
+            <button type="button" class="st-btn" data-delta="-1" aria-label="한 명 줄이기">−</button>
+            <output class="st-val" aria-live="polite"><b>1</b>명</output>
+            <button type="button" class="st-btn" data-delta="1" aria-label="한 명 늘리기">+</button>
+          </div>
+        </div>
+
+        <div class="field sub-field" data-when="bus=희망" hidden>
+          <label class="lbl" for="rsvpPhone">연락처 <small>(버스 안내를 받으실 번호)</small></label>
+          <input class="inp" id="rsvpPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="16" placeholder="010-0000-0000">
+          <p class="err" data-err="phone" role="alert"></p>
+        </div>
+
+        <p class="rsvp-note">1월 31일(일)까지 수요 조사 후 일정 인원 이상 모집 시 운행이 확정되며, 확정 여부 및 상세 탑승 장소와 시간은 추후 개별 연락으로 안내해 드립니다.</p>
       </div>
 
-      <p class="rsvp-note" data-bus>1월 31일(일)까지 수요 조사 후 일정 인원 이상 모집 시 운행이 확정되며, 확정 여부 및 상세 탑승 장소와 시간은 추후 개별 연락으로 안내해 드립니다.</p>
-      <p class="rsvp-note" id="busClosed" hidden>전세버스 수요 조사는 1월 31일(일)에 마감되었습니다.</p>
+      <div class="rsvp-note" id="busClosed" hidden>
+        <p>전세버스 수요 조사는 1월 31일(일)에 마감되었습니다.</p>
+        <p id="busKept" hidden></p>
+      </div>
 
       <p class="rsvp-privacy">입력하신 정보는 예식 준비와 버스 안내에만 사용하고, 예식 후 삭제합니다.</p>
 
-      <p class="err err-submit" data-err="submit"></p>
+      <p class="err err-submit" data-err="submit" role="alert"></p>
       <button type="submit" class="btn-submit" id="rsvpSubmit">참석 여부 전달하기</button>
       <button type="button" class="btn-skip" id="rsvpSkip" hidden>오늘 하루 보지 않기</button>
     </form>
 
     <div class="rsvp-done" id="rsvpDone" hidden>
       <div class="done-ic"><svg class="ic"><use href="#i-check"/></svg></div>
-      <h3>참석 여부가 전달되었습니다</h3>
+      <h3 id="rsvpDoneTitle" tabindex="-1">참석 여부가 전달되었습니다</h3>
       <p id="rsvpDoneText"></p>
       <p class="done-test" id="rsvpTest" hidden>테스트 모드: 응답 저장 주소(rsvpEndpoint)가 아직 설정되지 않아 저장되지 않았습니다.</p>
       <button type="button" class="btn-submit" data-close>확인</button>
     </div>
+  </div>
+</div>
+
+<!-- ───────── 사진 크게 보기 ───────── -->
+<div class="modal viewer" id="viewer" role="dialog" aria-modal="true" aria-label="사진 크게 보기" hidden>
+  <div class="sheet viewer-sheet" tabindex="-1">
+    <div class="v-track" id="vTrack"></div>
+    <div class="v-top">
+      <p class="v-count" id="vCount" aria-live="polite"></p>
+      <button type="button" class="v-close" data-close>닫기<svg class="ic"><use href="#i-close"/></svg></button>
+    </div>
+    <button type="button" class="g-arrow v-prev" id="vPrev" aria-label="이전 사진"><svg class="ic"><use href="#i-left"/></svg></button>
+    <button type="button" class="g-arrow v-next" id="vNext" aria-label="다음 사진"><svg class="ic"><use href="#i-right"/></svg></button>
   </div>
 </div>
 

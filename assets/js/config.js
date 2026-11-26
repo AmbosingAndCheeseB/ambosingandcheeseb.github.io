@@ -42,7 +42,7 @@ window.WEDDING = {
   photos: {
     main: '',          // 예: 'images/main.jpg'   (세로 4:5 권장)
     ending: '',        // 예: 'images/ending.jpg' (세로 4:5 권장)
-    share: '',         // 예: 'images/og.jpg'     (카카오톡 공유 썸네일, 가로 1200×630 권장)
+    share: 'images/og.jpg', // 카카오톡 공유 썸네일 (가로 1200×630). 사진을 받으면 이 파일을 바꿔 주세요
     gallery: [],       // 예: ['images/gallery/01.jpg', 'images/gallery/02.jpg']  (10:13 권장)
     galleryPlaceholderCount: 6,
   },

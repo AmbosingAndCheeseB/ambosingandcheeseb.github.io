@@ -7,8 +7,11 @@
 | --- | --- |
 | `index.html` | 화면에 보이는 모든 글자 (인사말, 혼주, 안내사항, 계좌, 연락처, 참석 팝업 문구) |
 | `assets/js/config.js` | 날짜, 지도 좌표, 사진 경로, 참석 응답 저장 주소, 카카오 키 |
-| `assets/js/main.js` | 달력·D-day, 지도, 갤러리, 팝업, 참석 응답, 복사·공유 |
+| `assets/js/main.js` | 달력·D-day, 약도·길안내, 갤러리·크게 보기, 팝업, 참석 응답, 아래 도우미 바(글씨 크게), 꽃잎, 복사·공유 |
 | `assets/css/style.css` | 디자인 |
+| `assets/fonts/RIDIBatang-sub.woff2` | 리디바탕에서 자주 쓰는 한글 2,350자만 담은 폰트 (126KB, 원본 707KB) |
+| `assets/img/map.jpg` | 바울센터 약도 (OpenStreetMap, 정중앙이 예식장) |
+| `images/og.jpg` | 카카오톡 공유 썸네일 (지금은 글자로 만든 임시 카드) |
 | `rsvp/apps-script.gs` | 참석 응답을 구글 시트에 저장하는 스크립트 |
 
 `design/` 폴더는 이전 3D 앨범 설계안이며 페이지에서는 쓰지 않아요.
@@ -26,9 +29,12 @@ python3 -m http.server 8000
    - 메인 사진 `images/main.jpg` (세로 4:5)
    - 마무리 사진 `images/ending.jpg` (세로 4:5)
    - 갤러리 `images/gallery/01.jpg`, `02.jpg` … (10:13)
-   - 카카오톡 공유 썸네일 `images/og.jpg` (가로 1200×630)
+   - 카카오톡 공유 썸네일 `images/og.jpg` (가로 1200×630, 지금 있는 임시 카드를 덮어쓰기)
 2. `assets/js/config.js`의 `photos`에 경로를 적어요.
-3. 공유 썸네일은 `index.html`의 `og:image` 줄 주석을 풀어 주세요.
+3. 갤러리 사진은 누르면 전체 화면으로 크게 볼 수 있어요.
+
+> 카카오톡은 처음 본 링크 미리보기를 한동안 기억해요. 썸네일을 바꾼 뒤 예전 미리보기가 보이면
+> [카카오 공유 디버거](https://developers.kakao.com/tool/debugger/sharing)에서 주소를 넣고 '캐시 초기화'를 눌러 주세요.
 
 사진은 긴 변 1600px, 장당 500KB 안팎으로 줄여서 넣으면 카카오톡 안에서도 빨리 떠요.
 
@@ -46,11 +52,22 @@ python3 -m http.server 8000
 > 현재 연결됨: 구글 시트 "모바일 청첩장 참석 응답 (양지원♥김성연)"
 > Apps Script 코드를 고친 뒤에는 **배포 → 배포 관리 → 수정(연필) → 버전: 새 버전 → 배포**를 해야 반영돼요. 웹 앱 주소는 그대로예요.
 
+- 저장에 실패하면 하객 화면에 "전달하지 못했어요. 다시 눌러 주세요"가 떠요. (성공으로 잘못 표시되지 않아요)
+- 버스 수요 조사 마감(`config.js`의 `busDeadline`, 스크립트의 `BUS_DEADLINE`) 뒤에는 버스 질문이 사라지고,
+  다시 응답해도 기존 버스 신청은 지워지지 않아요. 마감을 바꾸면 두 곳을 함께 바꿔 주세요.
+- 다른 기기에서 같은 성함·구분으로 응답하면 '응답' 시트에서 노란색으로 표시되고, '요약'에 개수가 나와요.
+- 참석 팝업은 처음 방문할 때 표지를 잠깐 보여 준 뒤 떠요. 이미 응답했거나, '오늘 하루 보지 않기'를 눌렀거나, 예식 당일부터는 뜨지 않아요.
+
 ## 카카오톡 공유 (선택)
 
 [Kakao Developers](https://developers.kakao.com)에서 앱을 만들고 **JavaScript 키**를 `config.js`의 `kakaoJsKey`에 넣어요.
 플랫폼 → Web 사이트 도메인에 `https://ambosingandcheeseb.github.io`를 등록해야 해요.
 키가 없으면 휴대폰 기본 공유창이 뜨거나, 청첩장 주소가 복사돼요.
+
+## 폰트 · 지도 출처
+
+- 리디바탕: © RIDI Corporation, SIL Open Font License 1.1 (자주 쓰는 글자만 담아 다시 묶었어요. 드문 글자는 원본 폰트에서 자동으로 불러와요)
+- 약도: © OpenStreetMap contributors (ODbL), 화면에 출처가 표시돼요
 
 ## 배포 (GitHub Pages)
 
