@@ -451,6 +451,14 @@
     }
     function clearErr(key) { showErr(key, ''); showErr('submit', ''); }
 
+    // 01012345678 → 010-1234-5678 (시트가 숫자로 바꿔 맨 앞 0을 지우지 않게)
+    function formatPhone(v) {
+      var d = String(v || '').replace(/[^0-9]/g, '');
+      if (/^01[0-9]{8,9}$/.test(d)) return d.replace(/^(\d{3})(\d{3,4})(\d{4})$/, '$1-$2-$3');
+      return String(v || '').trim();
+    }
+    $('#rsvpPhone').addEventListener('blur', function () { this.value = formatPhone(this.value); });
+
     function clientId() {
       if (memId) return memId;
       var id = store.get('rsvp-client');
@@ -476,7 +484,7 @@
       };
       if (attend === '참석' && busOpen) {
         d.bus = val('bus');
-        if (d.bus === '희망') { d.busCount = steps.busCount.value; d.phone = $('#rsvpPhone').value.trim(); }
+        if (d.bus === '희망') { d.busCount = steps.busCount.value; d.phone = formatPhone($('#rsvpPhone').value); }
       }
       if (attend === '참석' && !busOpen) { // 마감 뒤에는 기존 버스 신청을 그대로 유지
         var p = savedRsvp();
